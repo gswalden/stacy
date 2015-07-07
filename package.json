@@ -1,0 +1,22 @@
+{
+  "name": "pmbot",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "millisecond": "^0.1.1",
+    "moment-timezone": "^0.4.0",
+    "parse-ms": "^1.0.0",
+    "random-item": "^1.0.0",
+    "request": "^2.58.0",
+    "slack-client": "^1.4.1",
+    "string": "^3.3.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-nodemon": "~2.0.3",
+    "gulp-plumber": "~1.0.1"
+  }
+}
