@@ -48,7 +48,7 @@ stacy.addMessageListener(function(message) {
     ];
     if (process.env.BOTMASTER) {
       help.push('Have a feature request or some feedback? Feel free to send them to me '
-        + 'like this `/msg stacy feedback: Learn to sing`.',);
+        + 'like this `/msg stacy feedback: Learn to sing`.');
     }
     help.push("You're awesome! Talk to you soon.");
     channel.send(help.join('\n'));
