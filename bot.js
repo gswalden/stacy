@@ -19,7 +19,7 @@ stacy.addMessageListener(function(message) {
   if (match) {
     var names = match[1].trim()
       .replace(/,/g, ' ') // comma separators become spaces
-      .replace(/@/g, '') // remove @ symbols
+      .replace(/[@:]/g, '') // remove @: symbols
       .split(/\s+/);
     names = stacy.filterNames(names);
     names = stacy.convertIDs(names);
