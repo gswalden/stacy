@@ -7,7 +7,7 @@ try {
   config = require('./nodemon.json');
 } catch(err) {
   config = {
-    script: 'bot.js',
+    script: 'index.js',
     ext: 'js',
     "env": {
       // Token from Bot's integration page

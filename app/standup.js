@@ -180,6 +180,9 @@ Standup.prototype.createUserObjects = function() {
   this.names.forEach(function(name) {
     var user = slack.getUserByName(name);
     var userID = user.id;
+    if (self.users[userID]) {
+      return; // user already part of standup
+    }
     user = self.users[userID] = {
       id: userID,
       name: name,

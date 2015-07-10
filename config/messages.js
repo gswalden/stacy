@@ -49,7 +49,7 @@ var affirmations = [
 var blockers = [
   'Finally, any blockers',
   'Anything in your way',
-  'Any blockers i should know about',
+  'Any blockers I should know about',
   'Blockers'
 ];
 
