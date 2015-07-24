@@ -132,6 +132,7 @@ Standup.prototype.listeners = function() {
     if (!self.active || message.getChannelType() != 'DM') return;
 
     var user = self.users[message.user];
+    if (!user) return;
 
     if (!user.responses.yesterday.length) {
       user.responses.yesterday.push(message.text);

@@ -4,7 +4,7 @@ var gulp = require('gulp'),
 
 var config;
 try {
-  config = require('./nodemon.json');
+  config = require('./nodemon');
 } catch(err) {
   config = {
     script: 'index.js',
