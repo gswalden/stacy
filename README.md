@@ -43,3 +43,10 @@ Instead of step `#6` above, copy the token and create a new file:
 Save as `nodemon.json` in the repo's root. The `BOTMASTER` field is optional and should be your Slack username.
 
 Now, return to Terminal and simply type `gulp` to boot up the server. An added bonus of this method: any changes to any `.js` files will be detected and automatically restart the script with your new code.
+
+### Deploying to Heroku
+
+A `Procfile` already exists, all you need to do is set `SLACK_TOKEN` as an environment variable in Heroku's config, then deploy.
+
+### To Do
+* Restructure to be used as an npm module
