@@ -3,7 +3,7 @@ var stacy = require('./stacy');
 var Standup = require('./standup');
 
 module.exports = function() {
-  stacy.addMessageListener(function(message) {
+  stacy.addMessageListener(function beginStandup(message) {
     if (message.getChannelType() == 'DM') return;
     var match = message.text.match(/^stand[-\s+]?up\s+(.+)/i);
     if (!match) return;
@@ -13,7 +13,8 @@ module.exports = function() {
     }
   });
 
-  stacy.addMessageListener(function(message) {
+  stacy.addMessageListener(function listTeams(message) {
+    if (stacy.isUserInStandup(message)) return;
     var match = message.text.match(/^list\s+teams?$/i);
     if (!match) return;
     var msg = [];
@@ -40,7 +41,8 @@ module.exports = function() {
     });
   });
 
-  stacy.addMessageListener(function(message) {
+  stacy.addMessageListener(function addTeam(message) {
+    if (stacy.isUserInStandup(message)) return;
     var match = message.text.match(/^add team\s+([\w.-]+)\s+(.+)/i);
     if (!match) return;
     var team = match[1];
@@ -51,7 +53,8 @@ module.exports = function() {
     });
   });
 
-  stacy.addMessageListener(function(message) {
+  stacy.addMessageListener(function removeTeam(message) {
+    if (stacy.isUserInStandup(message)) return;
     var match = message.text.match(/^remove team\s+([\w.-]+)\s*(.+)?/i);
     if (!match) return;
     var team = match[1];
@@ -66,7 +69,8 @@ module.exports = function() {
     });
   });
 
-  stacy.addMessageListener(function(message) {
+  stacy.addMessageListener(function help(message) {
+    if (stacy.isUserInStandup(message)) return;
     var match = /^h(i|ello|ey)\s+stacy$/i.test(message.text)
       || message.text == 'help' && message.getChannelType() == 'DM';
     if (!match) return;
@@ -93,8 +97,8 @@ module.exports = function() {
   });
 
   if (process.env.BOTMASTER) {
-    stacy.addMessageListener(function(message) {
-      if (message.getChannelType() != 'DM') return;
+    stacy.addMessageListener(function feedback(message) {
+      if (message.getChannelType() != 'DM' || stacy.isUserInStandup(message)) return;
       var match = message.text.match(/^feedback:?(.+)/i);
       if (!match) return;
       var reply = slack.getUserByID(message.user);

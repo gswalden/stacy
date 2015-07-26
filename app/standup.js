@@ -144,6 +144,7 @@ Standup.prototype.listeners = function() {
     } else if (!user.responses.blockers.length) {
       user.responses.blockers.push(message.text);
       user.complete = true;
+      stacy.activeStandupUsers[user.id] = false;
       stacy.sendDM(user, messages.getThanks(user.displayName));
       self.channel.send(messages.getConfirm(user.displayName));
       self.checkComplete();
@@ -184,6 +185,14 @@ Standup.prototype.createUserObjects = function() {
     if (self.users[userID]) {
       return; // user already part of standup
     }
+    if (stacy.activeStandupUsers[userID]) {
+      self.channel.send('Oh no! '
+        + stacy.getUserStr(user)
+        + ' is already part of an active standup in '
+        + stacy.activeStandupUsers[userID] + '.');
+      return;
+    }
+    stacy.activeStandupUsers[userID] = stacy.getChannelStr(self.channel);
     user = self.users[userID] = {
       id: userID,
       name: name,

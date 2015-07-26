@@ -3,6 +3,8 @@ var URL   = require('url-parse');
 var redis = require('redis');
 var client;
 
+var activeStandupUsers = {};
+
 function addMessageListener(cb) {
   slack.on('message', function(message) {
     if (!message.text) return;
@@ -69,6 +71,10 @@ function getUserStr(user) {
   return '<@' + user.id + '>';
 };
 
+function getChannelStr(channel) {
+  return '<#' + channel.id + '>';
+};
+
 function connect() {
   if (client) return;
 
@@ -117,13 +123,20 @@ function removeTeam(name, members, cb) {
   client.srem('teams', name, redisCB);
 }
 
+function isUserInStandup(message) {
+  return message.getChannelType() == 'DM' && activeStandupUsers[message.user];
+};
+
 module.exports = {
   addMessageListener: addMessageListener,
   activeStandups: {},
+  activeStandupUsers: activeStandupUsers,
+  isUserInStandup: isUserInStandup,
   formatUserList: formatUserList,
   sendDM: sendDM,
   filterNames: filterNames,
   getUserStr: getUserStr,
+  getChannelStr: getChannelStr,
   convertIDs: convertIDs,
   getTeam: getTeam,
   addTeam: addTeam,
