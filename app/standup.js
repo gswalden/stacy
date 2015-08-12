@@ -78,6 +78,11 @@ Standup.prototype.end = function(timer) {
   if (!this.active) return;
   stacy.activeStandups[this.channel.id] = this.active = false;
 
+  // close out all users
+  this.users.forEach(function(user) {
+    stacy.activeStandupUsers[user.id] = false;
+  })
+
   var uncompletes = this.getUncompletes();
   uncompletes = (uncompletes) ? ' _(did not finish: ' + uncompletes + ')_' : '';
   var str = (timer)
