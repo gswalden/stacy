@@ -3,6 +3,7 @@ var stacy = require('./stacy');
 var messages = require('../config/messages');
 var random = require('random-item');
 var ms = require('millisecond');
+var _ = require('lodash');
 var convert = require('./convert');
 
 function Standup(names, channel, starter) {
@@ -79,9 +80,9 @@ Standup.prototype.end = function(timer) {
   stacy.activeStandups[this.channel.id] = this.active = false;
 
   // close out all users
-  this.users.forEach(function(user) {
+  _.forEach(this.user, function(user) {
     stacy.activeStandupUsers[user.id] = false;
-  })
+  });
 
   var uncompletes = this.getUncompletes();
   uncompletes = (uncompletes) ? ' _(did not finish: ' + uncompletes + ')_' : '';
