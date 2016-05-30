@@ -1,6 +1,8 @@
-var parseMS = require('parse-ms');
+'use strict';
 
-module.exports = function(ms) {
+const parseMS = require('parse-ms');
+
+module.exports = function convert(ms) {
   ms = parseMS(ms);
   var str;
   if (ms.minutes) {

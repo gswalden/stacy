@@ -13,7 +13,6 @@ slack.login();
 
 listeners();
 
-
 // Launch something for heroku
 var http = require('http');
 var server = http.createServer(function (request, response) {

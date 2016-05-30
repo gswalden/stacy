@@ -6,7 +6,7 @@ RUN cd /src && \
   npm install -g nodemon && \
   npm install;
 
-ENV PORT=3000
+ENV PORT 3000
 
 EXPOSE $PORT
 
