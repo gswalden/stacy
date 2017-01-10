@@ -24,7 +24,7 @@ Standup.prototype.start = function() {
   var self = this;
   this.length = 0;
   this.startTime = Date.now();
-  var timeStr = '10 seconds';
+  var timeStr = '10 minutes';
   this.setLength(timeStr);
   self.channel.send([
     'Standup has begun! _(' + timeStr + ' to respond)_',
