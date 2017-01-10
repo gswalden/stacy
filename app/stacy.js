@@ -72,7 +72,9 @@ function getUserStr(user) {
 };
 
 function getChannelStr(channel) {
-  return '<#' + channel.id + '>';
+  return channel.is_group
+    ? 'a private group'
+    :'<#' + channel.id + '>';
 };
 
 function connect() {
