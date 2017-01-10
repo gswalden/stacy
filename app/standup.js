@@ -2,9 +2,8 @@ var slack = require('../config/slack');
 var stacy = require('./stacy');
 var messages = require('../config/messages');
 var random = require('random-item');
-var ms = require('millisecond');
+var ms = require('ms');
 var _ = require('lodash');
-var convert = require('./convert');
 
 function Standup(names, channel, starter) {
   this.active = false;
@@ -23,22 +22,30 @@ Standup.prototype.start = function() {
   stacy.activeStandups[this.channel.id] = this.active = true;
   this.listeners();
   var self = this;
-  var timeStr = '10 minutes';
-  this.length = ms(timeStr);
+  this.length = 0;
   this.startTime = Date.now();
-  this.endTime = this.startTime + this.length;
-  setTimeout(function() {
-    self.end(true);
-  }, this.length);
+  var timeStr = '10 seconds';
+  this.setLength(timeStr);
   self.channel.send([
     'Standup has begun! _(' + timeStr + ' to respond)_',
-    'Available commands: `status`, `end standup`'
+    'Available commands: `status`, `end standup`',
+    'To extend 5 minutes, type `extend 5m`'
   ].join('\n'));
   this.createUserObjects();
 };
 
+Standup.prototype.setLength = function(timeStr) {
+  this.length += ms(timeStr);
+  this.endTime = this.startTime + this.length;
+  clearTimeout(this.timeout);
+  var self = this;
+  this.timeout = setTimeout(function() {
+    self.end(true);
+  }, this.length);
+};
+
 Standup.prototype.progress = function() {
-  var timeRemain = convert(this.endTime - Date.now());
+  var timeRemain = ms(this.endTime - Date.now(), { long: true });
   var output = [timeRemain + ' remaining in standup.'];
   var complete = [];
   var started = [];
@@ -80,11 +87,11 @@ Standup.prototype.end = function(timer) {
   stacy.activeStandups[this.channel.id] = this.active = false;
 
   // close out all users
-  _.forEach(this.user, function(user) {
+  _.forEach(this.users, function(user) {
     stacy.activeStandupUsers[user.id] = false;
   });
 
-  var uncompletes = this.getUncompletes();
+  var uncompletes = this.getUncompletes(true);
   uncompletes = (uncompletes) ? ' _(did not finish: ' + uncompletes + ')_' : '';
   var str = (timer)
     ? 'Standup timer expired, here\'s what I got.'
@@ -122,11 +129,14 @@ Standup.prototype.checkComplete = function() {
   this.end();
 };
 
-Standup.prototype.getUncompletes = function() {
+Standup.prototype.getUncompletes = function(notify) {
   var uncompletes = [];
   for (var userID in this.users) {
     if (!this.users[userID].complete) {
       uncompletes.push(stacy.getUserStr(this.users[userID]));
+      if (notify) {
+        stacy.sendDM(this.users[userID], 'Standup has ended!');
+      }
     }
   }
   return uncompletes.join(', ');
@@ -181,6 +191,18 @@ Standup.prototype.listeners = function() {
       self.progress();
     }
   });
+
+  stacy.addMessageListener(function(message) {
+    if (!self.active
+      || message.getChannelType() == 'DM'
+      || message.channel != self.channel.id) return;
+
+    var match = message.text.match(/^extend\s+([\w ]+)/i);
+    if (match && ms(match[1]) > 0) {
+      self.setLength(match[1]);
+      self.channel.send(`Standup extended by ${ms(ms(match[1]), { long: true })}.`);
+    }
+  });
 };
 
 Standup.prototype.createUserObjects = function() {
@@ -211,7 +233,10 @@ Standup.prototype.createUserObjects = function() {
       responded: false,
       complete: false
     };
-    stacy.sendDM(user, messages.getGreeting(user.displayName));
+    stacy.sendDM(user, [
+      `_Standup from ${stacy.getChannelStr(self.channel)}_`,
+      messages.getGreeting(user.displayName),
+    ].join('\n'));
   });
 };
 
