@@ -41,7 +41,7 @@ Standup.prototype.setLength = function(timeStr) {
   var self = this;
   this.timeout = setTimeout(function() {
     self.end(true);
-  }, this.length);
+  }, this.endTime - Date.now());
 };
 
 Standup.prototype.progress = function() {
