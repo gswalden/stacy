@@ -29,7 +29,7 @@ Standup.prototype.start = function() {
   self.channel.send([
     'Standup has begun! _(' + timeStr + ' to respond)_',
     'Available commands: `status`, `end standup`',
-    'To extend 5 minutes, type `extend 5m`'
+    'To extend, follow this pattern: `extend 5m` `extend 1h`'
   ].join('\n'));
   this.createUserObjects();
 };
