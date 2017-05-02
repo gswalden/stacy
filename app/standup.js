@@ -112,7 +112,7 @@ Standup.prototype.end = function(timer) {
       if (!user.responses[type].length) continue;
       var userStr = stacy.getUserStr(user);
       user.responses[type].forEach(function(message) {
-        response.push('>' + userStr + ': ' + message);
+        response.push('>' + userStr + ': ' + message.replace('\n', '\n>'));
       });
     }
     response = response.concat(['', '']); // break the left border "quote" formatting
@@ -150,15 +150,20 @@ Standup.prototype.listeners = function() {
     var user = self.users[message.user];
     if (!user) return;
 
+    var text = message.text, match;
+    while (match = text.match(/<(http.+?)(\|(.+))?>/)) {
+      text = text.replace(match[0], match[3]);
+    }
+
     if (!user.responses.yesterday.length) {
-      user.responses.yesterday.push(message.text);
+      user.responses.yesterday.push(text);
       user.responded = true;
       stacy.sendDM(user, messages.getToday(user.displayName));
     } else if (!user.responses.today.length) {
-      user.responses.today.push(message.text);
+      user.responses.today.push(text);
       stacy.sendDM(user, messages.getBlocker(user.displayName));
     } else if (!user.responses.blockers.length) {
-      user.responses.blockers.push(message.text);
+      user.responses.blockers.push(text);
       user.complete = true;
       stacy.activeStandupUsers[user.id] = false;
       stacy.sendDM(user, messages.getThanks(user.displayName));
