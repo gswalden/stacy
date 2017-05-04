@@ -117,7 +117,6 @@ Standup.prototype.end = function(timer) {
               .split('\n')
               .compact()
               .join('\n>')
-              .value()        
         );
       });
     }
