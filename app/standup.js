@@ -112,7 +112,13 @@ Standup.prototype.end = function(timer) {
       if (!user.responses[type].length) continue;
       var userStr = stacy.getUserStr(user);
       user.responses[type].forEach(function(message) {
-        response.push('>' + userStr + ': ' + message.replace('\n', '\n>'));
+        response.push(`>${userStr}: ` 
+          + _(message)
+              .split('\n')
+              .compact()
+              .join('\n>')
+              .value()        
+        );
       });
     }
     response = response.concat(['', '']); // break the left border "quote" formatting
