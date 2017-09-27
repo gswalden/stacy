@@ -112,7 +112,7 @@ Standup.prototype.end = function(timer) {
       if (!user.responses[type].length) continue;
       var userStr = stacy.getUserStr(user);
       user.responses[type].forEach(function(message) {
-        response.push(`>${userStr}: ` 
+        response.push(`>${userStr}: `
           + _(message)
               .split('\n')
               .compact()
@@ -155,9 +155,11 @@ Standup.prototype.listeners = function() {
     var user = self.users[message.user];
     if (!user) return;
 
-    var text = message.text, match;
-    while (match = text.match(/<(http.+?)(\|(.+))?>/)) {
-      text = text.replace(match[0], match[3]);
+    var text = message.text, match, link;
+    while (match = text.match(/(<http.+?>)/)) {
+      link = match[1].split('|');
+      link = _.trim(link[1] || link[0], '<>');
+      text = text.replace(match[0], link);
     }
 
     if (!user.responses.yesterday.length) {
