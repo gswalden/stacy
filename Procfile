@@ -1,1 +1,1 @@
-web: forever index.js
+worker: node index.js

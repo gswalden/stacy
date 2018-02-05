@@ -7,6 +7,9 @@
     "on": "node ./node_modules/heroku-scaler/bin/heroku-scaler.js on",
     "off": "node ./node_modules/heroku-scaler/bin/heroku-scaler.js off"
   },
+  "engines": {
+    "node": "8"
+  },
   "dependencies": {
     "forever": "^0.15.2",
     "heroku-scaler": "^1.1.0",
