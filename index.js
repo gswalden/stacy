@@ -15,11 +15,3 @@ slack.on('error', function(error) {
 slack.login();
 
 listeners();
-
-// Launch something for heroku
-var http = require('http');
-var server = http.createServer(function (request, response) {
-  response.writeHead(200, {"Content-Type": "text/plain"});
-  response.end("Hello Stacy!\n");
-});
-server.listen(process.env.PORT || 8000);
