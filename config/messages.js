@@ -1,8 +1,6 @@
 var S = require('string');
 var random = require('random-item');
 var moment = require('moment-timezone');
-var now = moment().tz('America/New_York');
-var yesterday = moment(now).subtract(1, 'd');
 
 var greetings = [
   'Hi {{name}}!',
@@ -81,6 +79,7 @@ messages.getGreeting = function(name) {
 
 function getYesterday() {
   var options = [];
+  const { now, yesterday } = nowAndYesterday();
   if (now.day() !== 1) {
     options.push('yesterday');
     options.push(yesterday.format('dddd'));
@@ -104,6 +103,7 @@ messages.getBlocker = function() {
 
 messages.getThanks = function(name) {
   var options = thanks;
+  const { now } = nowAndYesterday();
   if (now.day() == 5) {
     options = options.concat(weekend);
   }
@@ -113,5 +113,12 @@ messages.getThanks = function(name) {
 messages.getConfirm = function(name) {
   return S(random(confirm)).template({ name: name }).s;
 };
+
+function nowAndYesterday() {
+  return {
+    now: moment().tz('America/New_York'),
+    yesterday: moment(now).subtract(1, 'd')
+  };
+}
 
 module.exports = messages;
