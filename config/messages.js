@@ -115,8 +115,9 @@ messages.getConfirm = function(name) {
 };
 
 function nowAndYesterday() {
+  const now = moment().tz('America/New_York');
   return {
-    now: moment().tz('America/New_York'),
+    now,
     yesterday: moment(now).subtract(1, 'd')
   };
 }
